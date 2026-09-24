@@ -1,0 +1,32 @@
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test binaries
+*.test
+repl.log
+
+# Coverage / profiling output
+*.out
+coverage.*
+
+# Local build output
+bin/
+dist/
+
+# Neovim swap / backup files
+*.swp
+*.swo
+*~
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
