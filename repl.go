@@ -10,27 +10,23 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
+	callback    func(*config) error
 }
 
-var register map[string]cliCommand
+const baseURL = "https://pokeapi.co/api/v2/location-area/"
 
-func init() {
-	register = map[string]cliCommand{
-		"exit": {
-			name:        "exit",
-			description: "Exit the Pokedex",
-			callback:    commandExit,
-		},
-		"help": {
-			name:        "help",
-			description: "Displays a help message",
-			callback:    commandHelp,
-		},
-	}
+type locationArea struct {
+	Count    int       `json:"count"`
+	Next     string    `json:"next"`
+	Previous any       `json:"previous"`
+	Results  []Results `json:"results"`
+}
+type Results struct {
+	Name string `json:"name"`
+	URL  string `json:"url"`
 }
 
-func startRepl() {
+func startRepl(config *config) {
 
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -43,11 +39,13 @@ func startRepl() {
 
 		cleanedInput := cleanInput(scanner.Text())
 		input := cleanedInput[0]
-		command, ok := register[input]
+		menu, ok := getCommands()[input]
 		if !ok {
 			fmt.Println("Unknown command")
 		} else {
-			command.callback()
+			if err := menu.callback(config); err != nil {
+				fmt.Println(err)
+			}
 
 		}
 	}
@@ -63,20 +61,33 @@ func cleanInput(text string) []string {
 	return stringList
 }
 
-func commandExit() error {
-	fmt.Println("Closing the Pokedex...Goodbye!")
-	os.Exit(0)
-	return nil
+type config struct {
+	commands map[string]cliCommand
+	page     int
 }
 
-func commandHelp() error {
-	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:")
-	fmt.Println()
-	for _, command := range register {
-		//fmt.Printf("%s: %s", command.name, command.description)
-		fmt.Printf("%s: %s\n", command.name, command.description)
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+		"map": {
+			name:        "map",
+			description: "Obtain a list of location areas",
+			callback:    commandMap,
+		},
+		"mapb": {
+			name:        "mapb",
+			description: "Move backwards in a list of location areas",
+			callback:    commandMapB,
+		},
 	}
-	fmt.Println()
-	return nil
+
 }
