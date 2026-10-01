@@ -63,6 +63,8 @@ func cleanInput(text string) []string {
 
 type config struct {
 	commands map[string]cliCommand
+	Next     string
+	Previous any
 	page     int
 }
 

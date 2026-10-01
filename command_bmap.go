@@ -4,17 +4,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 func commandMapB(cfg *config) error {
-	if cfg.page == 0 {
-		fmt.Println("You're on the first page")
+	updatedURL := ""
+	if cfg.Previous == nil {
+		fmt.Println("you're on the first page")
 		return nil
 	} else {
-		cfg.page -= 20
+		updatedURL = cfg.Previous.(string)
 	}
-	updatedURL := baseURL + "?offset=" + strconv.Itoa(cfg.page) + "&limit=20"
 	req, err := http.NewRequest("GET", updatedURL, nil)
 	if err != nil {
 		return fmt.Errorf("Error building http request: %v", err)
@@ -32,6 +31,8 @@ func commandMapB(cfg *config) error {
 	if err := decoder.Decode(&webJson); err != nil {
 		return err
 	}
+	cfg.Next = webJson.Next
+	cfg.Previous = webJson.Previous
 	for _, location := range webJson.Results {
 		fmt.Println(location.Name)
 	}
