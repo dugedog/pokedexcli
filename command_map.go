@@ -1,40 +1,39 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
-	"net/http"
 )
 
 func commandMap(cfg *config) error {
-	updatedURL := ""
-	if cfg.Next == "" {
-		updatedURL = baseURL
-	} else {
-		updatedURL = cfg.Next
-	}
-	req, err := http.NewRequest("GET", updatedURL, nil)
+	listLocations, err := cfg.pokeapiClient.ListLocations(cfg.Next)
 	if err != nil {
-		return fmt.Errorf("Error building http request: %v", err)
+		return fmt.Errorf("Error trying to get locations: %v", err)
 	}
-	client := &http.Client{}
-	res, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("Error executin http request: %v", err)
-	}
-	defer res.Body.Close()
 
-	var webJson locationArea
-
-	decoder := json.NewDecoder(res.Body)
-	if err := decoder.Decode(&webJson); err != nil {
-		return err
-	}
-	cfg.Next = webJson.Next
-	cfg.Previous = webJson.Previous
-	for _, location := range webJson.Results {
+	cfg.Next = listLocations.Next
+	cfg.Previous = listLocations.Previous
+	for _, location := range listLocations.Results {
 		fmt.Println(location.Name)
 	}
 
+	return nil
+}
+
+func commandMapB(cfg *config) error {
+	fmt.Println(main
+	if cfg.Previous == nil {
+		return fmt.Errorf("you're on the first page")
+
+	}
+	listLocations, err := cfg.pokeapiClient.ListLocations(cfg.Previous)
+	if err != nil {
+		return fmt.Errorf("Error trying to get locations: %v", err)
+	}
+
+	cfg.Next = listLocations.Next
+	cfg.Previous = listLocations.Previous
+	for _, location := range listLocations.Results {
+		fmt.Println(location.Name)
+	}
 	return nil
 }
