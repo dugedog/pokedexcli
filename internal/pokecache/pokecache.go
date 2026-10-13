@@ -18,11 +18,11 @@ type cacheEntry struct {
 
 func NewCache(interval time.Duration) *Cache {
 	intervalSeconds := interval * time.Second
-	createdCache := &Cache{duration: int(intervalSeconds)}
+	createdCache := &Cache{duration: int(intervalSeconds),
+		cacheMap: make(map[string]cacheEntry)}
 	tracker := time.NewTicker(intervalSeconds)
 	go func() {
-		for loop := range tracker.C {
-			print(loop)
+		for range tracker.C {
 			createdCache.reapLoop(intervalSeconds)
 		}
 	}()

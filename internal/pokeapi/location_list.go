@@ -16,7 +16,6 @@ func (c *Client) ListLocations(pageURL *string) (locationArea, error) {
 	if err != nil {
 		return locationArea{}, fmt.Errorf("Error building http request: %v", err)
 	}
-
 	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return locationArea{}, err

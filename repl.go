@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/dugdeog/pokedexcli/internal/pokeapi"
+	"github.com/dugdeog/pokedexcli/internal/pokecache"
 	"os"
 	"strings"
 )
@@ -54,6 +55,7 @@ type config struct {
 	pokeapiClient pokeapi.Client
 	Next          *string
 	Previous      *string
+	pCache        *pokecache.Cache
 }
 
 func getCommands() map[string]cliCommand {
