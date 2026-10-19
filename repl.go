@@ -80,6 +80,11 @@ func getCommands() map[string]cliCommand {
 			description: "Move backwards in a list of location areas",
 			callback:    commandMapB,
 		},
+		"explore": {
+			name:        "explore",
+			description: "Look around and stuff",
+			callback:    commandExplore,
+		},
 	}
 
 }
