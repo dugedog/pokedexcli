@@ -27,6 +27,9 @@ func startRepl(config *config) {
 
 		cleanedInput := cleanInput(scanner.Text())
 		input := cleanedInput[0]
+		if len(cleanedInput) > 1 {
+			config.argument = cleanedInput[1:]
+		}
 		menu, ok := getCommands()[input]
 		if !ok {
 			fmt.Println("Unknown command")
@@ -51,6 +54,7 @@ func cleanInput(text string) []string {
 
 type config struct {
 	commands      map[string]cliCommand
+	argument      []string
 	pokeapiClient pokeapi.Client
 	Next          *string
 	Previous      *string
