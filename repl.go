@@ -11,7 +11,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 func startRepl(config *config) {
@@ -27,14 +27,18 @@ func startRepl(config *config) {
 
 		cleanedInput := cleanInput(scanner.Text())
 		input := cleanedInput[0]
+		var arg []string
 		if len(cleanedInput) > 1 {
-			config.argument = cleanedInput[1:]
+			arg = cleanedInput[1:]
+
 		}
+
 		menu, ok := getCommands()[input]
+
 		if !ok {
 			fmt.Println("Unknown command")
 		} else {
-			if err := menu.callback(config); err != nil {
+			if err := menu.callback(config, arg...); err != nil {
 				fmt.Println(err)
 			}
 
@@ -54,7 +58,6 @@ func cleanInput(text string) []string {
 
 type config struct {
 	commands      map[string]cliCommand
-	argument      []string
 	pokeapiClient pokeapi.Client
 	Next          *string
 	Previous      *string
