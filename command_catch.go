@@ -19,8 +19,9 @@ func commandCatch(cfg *config, arg ...string) error {
 	catchDifficulty := (pokemonTarget.BaseExperience / 10) + 100
 	catchAttempt := rand.Intn(catchDifficulty)
 	if catchAttempt <= 40 {
+		cfg.caughtPokemon[name] = pokemonTarget
 		fmt.Printf("%v was caught!\n", pokemonTarget.Name)
-		cfg.pokeapiClient.Pokedex[name] = pokemonTarget
+		fmt.Println("You may now inspect it with the inspect command.")
 	} else {
 		fmt.Printf("%v escaped!\n", pokemonTarget.Name)
 

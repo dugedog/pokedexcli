@@ -58,6 +58,7 @@ func cleanInput(text string) []string {
 
 type config struct {
 	commands      map[string]cliCommand
+	caughtPokemon map[string]pokeapi.PokemonDetails
 	pokeapiClient pokeapi.Client
 	Next          *string
 	Previous      *string
@@ -75,6 +76,12 @@ func getCommands() map[string]cliCommand {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Displays informaion about a pokemon if you have caught it",
+			callback:    commandInspect,
+		},
+
 		"map": {
 			name:        "map",
 			description: "Obtain a list of location areas",
@@ -89,6 +96,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Look around and stuff",
 			callback:    commandExplore,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "List Pokemon from your pokedex",
+			callback:    commandPokedex,
 		},
 		"catch": {
 			name:        "catch",
